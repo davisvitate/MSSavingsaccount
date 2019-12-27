@@ -14,13 +14,13 @@ public interface ClientPersonRepository  extends ReactiveMongoRepository<ClientP
 	@Query("{ 'name': ?0 }")
     Flux<ClientPerson> findByNamee(final String name);
 	
-	@Query("{ 'dni': ?0 }")
+	@Query("{ 'lastname': ?0 }")
     Flux<ClientPerson> findByLastnamee(final String lastname);
 	
 	@Query("{ 'dni': ?0 }")
     Flux<ClientPerson> findByDni(final String dni);
 	
-	@Query("{ 'id': ?0 }")
+	@Query("{ '_id': ?0 }")
     Mono<ClientPerson> findByIDA(final String id);
 
 }

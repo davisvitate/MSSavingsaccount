@@ -79,7 +79,7 @@ public class ClientPersonController {
 	@RequestMapping(value = "/dni/{dni}", method = RequestMethod.GET)
     @ResponseBody
     public Flux<ClientPerson> findByDni(@PathVariable("dni") String dni) {
-        return service.findClientPersonByName(dni);
+        return service.findClientPersonByDni(dni);
     }
 	
 	

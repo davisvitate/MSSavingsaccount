@@ -22,6 +22,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 
 import com.microservice.counth.CountH.model.CountH;
 import com.microservice.counth.CountH.model.Movement;
+import com.microservice.counth.CountH.services.CountHServiceImp;
 import com.microservice.counth.CountH.services.CountHServices;
 
 import reactor.core.publisher.Flux;
@@ -33,6 +34,9 @@ public class MovementController {
 	
 	@Autowired
 	private CountHServices service;
+	
+	@Autowired
+	private CountHServiceImp serviceclient;
 	
 	@GetMapping("/movement")
 	public Mono<ResponseEntity<Flux<Movement>>> lista(){
@@ -51,13 +55,17 @@ public class MovementController {
 		Movement mov= new Movement();
 		
 		return service.findById(id).flatMap(c -> {
-			if(c.getMonto()>counth.getMonto()) {
-			c.setMonto(c.getMonto()-counth.getMonto());
+			double montoantes=c.getMonto();
+			if(montoantes>=counth.getMonto()) {
+			c.setMonto(montoantes-counth.getMonto());
+			mov.setNum_count(counth.getNum());
 			mov.setDescription("Retire");
 			mov.setSaldo(counth.getMonto());
 			mov.setDate(new Date());
 			mov.setClient(counth.getClientperson());
 			service.saveMove(mov).subscribe();// registre of the movement
+			
+			serviceclient.saveMSMovement(mov).subscribe();// registre of the movement on the microservice
 			}
 			return service.save(c);
 		}).map(c->ResponseEntity.created(URI.create("/api/counth/retire/".concat(c.getId())))
@@ -71,13 +79,15 @@ public class MovementController {
 	public Mono<ResponseEntity<CountH>> upadeposit(@RequestBody CountH counth, @PathVariable String id){
 		Movement mov= new Movement();
 		return service.findById(id).flatMap(c -> {
-			
-			c.setMonto(c.getMonto()+ counth.getMonto());
+			double montoantes= c.getMonto();
+			c.setMonto(montoantes + counth.getMonto());
 			c.setClientperson(counth.getClientperson());
+			mov.setNum_count(counth.getNum());
 			mov.setDescription("Deposite");
 			mov.setSaldo(counth.getMonto());
 			mov.setDate(new Date());
 			mov.setClient(counth.getClientperson());
+			service.saveMove(mov).subscribe();// deposite of the mevement
 			return service.save(c);
 		}).map(c->ResponseEntity.created(URI.create("/api/counth/deposite/".concat(c.getId())))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

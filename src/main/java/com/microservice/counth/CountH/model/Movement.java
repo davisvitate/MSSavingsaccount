@@ -13,6 +13,9 @@ public class Movement {
 
 	@Id
 	private String id;
+	
+	@NotNull
+	private String num_count;
 
 	@NotNull
 	private double saldo;
@@ -66,4 +69,17 @@ public class Movement {
 		this.client = client;
 	}
 
+	public String getNum_count() {
+		return num_count;
+	}
+
+	public void setNum_count(String num_count) {
+		this.num_count = num_count;
+	}
+
+	
+
+	
+
+	
 }

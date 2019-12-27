@@ -1,7 +1,11 @@
 package com.microservice.counth.CountH.services;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.microservice.counth.CountH.model.ClientPerson;
 import com.microservice.counth.CountH.model.CountH;
@@ -14,11 +18,20 @@ import com.microservice.counth.CountH.repository.FirmanteRepository;
 import com.microservice.counth.CountH.repository.MoveRepository;
 import com.microservice.counth.CountH.repository.TitularRepository;
 
+
+
+
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 public class CountHServiceImp implements CountHServices {
+	
+	@Autowired
+	@Qualifier("Movement")
+	WebClient client;
+	
 	@Autowired
 	private CountHRepository countrepositry;
 	
@@ -174,6 +187,16 @@ public class CountHServiceImp implements CountHServices {
 		return clientrerepository.findByLastnamee(lastname);
 	}
 
+	@SuppressWarnings("deprecation")
+	public Mono<Movement> saveMSMovement(Movement movement) {
+		return client.post()
+				.accept(APPLICATION_JSON_UTF8)
+				.contentType(APPLICATION_JSON_UTF8)
+				//.body(fromObject(producto))
+				.syncBody(movement)
+				.retrieve()
+				.bodyToMono(Movement.class);
+	}
 	
 
 	
