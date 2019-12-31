@@ -56,37 +56,53 @@ public class CountHController {
 	}
 	
 	@PostMapping
-	public Mono<ResponseEntity<Map<String, Object>>> crear(@Valid @RequestBody Mono<CountH> monoProducto){
+	public Mono<CountH> crear(@RequestBody CountH monoProducto){
 		
-		Map<String, Object> respuesta = new HashMap<String, Object>();
-		
-		return monoProducto.flatMap(counth->{
-			return service.save(counth).map(c->{
-				respuesta.put("saving account", c);
-				respuesta.put("mensaje", "cuenta de ahoro creada con exito");
-				return ResponseEntity
-						.created(URI.create("/api/counth/".concat(c.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
-						.body(respuesta);
+			return service.save(monoProducto);
 						
 					
-			});
-		}).onErrorResume(t -> {
-			return Mono.just(t).cast(WebExchangeBindException.class)
-					.flatMap(e -> Mono.just(e.getFieldErrors()))
-					.flatMapMany(Flux::fromIterable)
-					.map(fieldError -> "El campo "+fieldError.getField() + " " + fieldError.getDefaultMessage())
-					.collectList()
-					.flatMap(list -> {
-						respuesta.put("errors", list);
-						respuesta.put("status", HttpStatus.BAD_REQUEST.value());
-						return Mono.just(ResponseEntity.badRequest().body(respuesta));
-					});
-							
-		});
+			
+		
 		
 
 	}
+	
+//	@PostMapping
+//	public Mono<ResponseEntity<Map<String, Object>>> crear(@RequestBody Mono<CountH> monoProducto){
+//		
+//		Map<String, Object> respuesta = new HashMap<String, Object>();
+//		
+//		return monoProducto.flatMap(counth->{
+//			return service.save(counth).map(c->{
+//				respuesta.put("saving account", c);
+//				respuesta.put("mensaje", "cuenta de ahoro creada con exito");
+//				return ResponseEntity
+//						.created(URI.create("/api/counth/".concat(c.getId())))
+//						.contentType(MediaType.APPLICATION_JSON_UTF8)
+//						.body(respuesta);
+//						
+//					
+//			});
+//		}).onErrorResume(t -> {
+//			return Mono.just(t).cast(WebExchangeBindException.class)
+//					.flatMap(e -> Mono.just(e.getFieldErrors()))
+//					.flatMapMany(Flux::fromIterable)
+//					.map(fieldError -> "El campo "+fieldError.getField() + " " + fieldError.getDefaultMessage())
+//					.collectList()
+//					.flatMap(list -> {
+//						respuesta.put("errors", list);
+//						respuesta.put("status", HttpStatus.BAD_REQUEST.value());
+//						return Mono.just(ResponseEntity.badRequest().body(respuesta));
+//					});
+//							
+//		});
+//		
+//
+//	}
+	
+//	public Mono<> create(@RequestBody Mono<CountH> monoProducto){
+//		
+//	}
 	
 	@PutMapping("/{id}")
 	public Mono<ResponseEntity<CountH>> editar(@RequestBody CountH counth, @PathVariable String id){
