@@ -61,14 +61,23 @@ public class CountHController {
 	}
 	
 	
+//	@PostMapping
+//	public Mono<CountH> create(@RequestBody CountH monoCounth){
+//		String dni =monoCounth.getClientperson().getDni();
+//		Mono<CountH> mono = null;
+//		if( service.findClientPersonByDni(dni)!= null) {
+//			 mono= service.save(monoCounth);			
+//		}
+//		return mono;
+//			 
+//									
+//	}
+	
 	@PostMapping
 	public Mono<CountH> create(@RequestBody CountH monoCounth){
-		String dni =monoCounth.getClientperson().getDni();
-		Mono<CountH> mono = null;
-		if( service.findClientPersonByDni(dni)!= null) {
-			 mono= service.save(monoCounth);			
-		}
-		return mono;
+		
+		
+		return service.save(monoCounth);
 			 
 									
 	}

@@ -33,6 +33,10 @@ public class CountHServiceImp implements CountHServices {
 	WebClient client;
 	
 	@Autowired
+	@Qualifier("Client")
+	WebClient client1;
+	
+	@Autowired
 	private CountHRepository countrepositry;
 	
 	@Autowired
@@ -201,6 +205,17 @@ public class CountHServiceImp implements CountHServices {
 				.syncBody(movement)
 				.retrieve()
 				.bodyToMono(Movement.class);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Mono<ClientPerson> saveMSClient(ClientPerson client) {
+		return client1.post()
+				.accept(APPLICATION_JSON_UTF8)
+				.contentType(APPLICATION_JSON_UTF8)
+				//.body(fromObject(producto))
+				.syncBody(client)
+				.retrieve()
+				.bodyToMono(ClientPerson.class);
 	}
 	
 

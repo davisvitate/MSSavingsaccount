@@ -29,7 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/counth")
+@RequestMapping("/counth")
 public class MovementController {
 	
 	@Autowired
@@ -68,7 +68,7 @@ public class MovementController {
 			serviceclient.saveMSMovement(mov).subscribe();// registre of the movement on the microservice
 			}
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/api/counth/retire/".concat(c.getId())))
+		}).map(c->ResponseEntity.created(URI.create("/counth/retire/".concat(c.getId())))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.body(c))
 		.defaultIfEmpty(ResponseEntity.notFound().build());
@@ -89,7 +89,7 @@ public class MovementController {
 			mov.setClient(counth.getClientperson());
 			service.saveMove(mov).subscribe();// deposite of the mevement
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/api/counth/deposite/".concat(c.getId())))
+		}).map(c->ResponseEntity.created(URI.create("/counth/deposite/".concat(c.getId())))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.body(c))
 		.defaultIfEmpty(ResponseEntity.notFound().build());
