@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+
+
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/counth")	
 public class CountHController {
+	private static Logger log = LoggerFactory.getLogger(CountHController.class);
 	
 	@Autowired
 	private CountHServices service;
@@ -55,17 +59,13 @@ public class CountHController {
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 	
+	
 	@PostMapping
-	public Mono<CountH> crear(@RequestBody CountH monoProducto){
+	public Mono<CountH> create(@RequestBody CountH monoProducto){
 		
-			return service.save(monoProducto);
-						
-					
-			
-		
-		
-
+			return service.save(monoProducto);						
 	}
+	
 	
 //	@PostMapping
 //	public Mono<ResponseEntity<Map<String, Object>>> crear(@RequestBody Mono<CountH> monoProducto){
@@ -79,9 +79,7 @@ public class CountHController {
 //				return ResponseEntity
 //						.created(URI.create("/api/counth/".concat(c.getId())))
 //						.contentType(MediaType.APPLICATION_JSON_UTF8)
-//						.body(respuesta);
-//						
-//					
+//						.body(respuesta);											
 //			});
 //		}).onErrorResume(t -> {
 //			return Mono.just(t).cast(WebExchangeBindException.class)
@@ -93,16 +91,13 @@ public class CountHController {
 //						respuesta.put("errors", list);
 //						respuesta.put("status", HttpStatus.BAD_REQUEST.value());
 //						return Mono.just(ResponseEntity.badRequest().body(respuesta));
-//					});
-//							
+//					});						
 //		});
-//		
-//
 //	}
 	
 //	public Mono<> create(@RequestBody Mono<CountH> monoProducto){
 //		
-//	}
+
 	
 	@PutMapping("/{id}")
 	public Mono<ResponseEntity<CountH>> editar(@RequestBody CountH counth, @PathVariable String id){
