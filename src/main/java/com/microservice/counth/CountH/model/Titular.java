@@ -17,7 +17,7 @@ public class Titular {
 	private String name;
 	
 	
-	private Double lastname;
+	private String lastname;
 	
 	
 	private String dni;
@@ -38,11 +38,11 @@ public class Titular {
 		this.name = name;
 	}
 
-	public Double getLastname() {
+	public String getLastname() {
 		return lastname;
 	}
 
-	public void setLastname(Double lastname) {
+	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
 

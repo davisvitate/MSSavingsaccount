@@ -120,6 +120,11 @@ public class CountHServiceImp implements CountHServices {
 		// TODO Auto-generated method stub
 		return titularrepo.delete(titular);
 	}
+//	@Override
+//	public Mono<Void> deleteTitularbyId(String titular) {
+//		// TODO Auto-generated method stub
+//		return titularrepo.deleteById(titular);
+//	}
 
 	@Override
 	public Flux<Firmante> findAllFirmante() {

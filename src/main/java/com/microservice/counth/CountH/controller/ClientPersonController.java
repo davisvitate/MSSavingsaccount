@@ -31,7 +31,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/client")	
+@RequestMapping("/counth/client")	
 public class ClientPersonController {
 	
 	@Autowired
@@ -88,35 +88,41 @@ public class ClientPersonController {
     public Flux<ClientPerson> findByLast(@PathVariable("lastname") String lastname) {
         return service.findClientPersonByLastname(lastname);
     }
+//	@PostMapping
+//	public Mono<ResponseEntity<Map<String, Object>>> crearclientperson(@Valid @RequestBody Mono<ClientPerson> monoClient){
+//		
+//		Map<String, Object> respuesta = new HashMap<String, Object>();
+//		
+//		return monoClient.flatMap(clientperson ->{
+//			return service.saveClientPerson(clientperson).map(c ->{
+//				respuesta.put("client", c);
+//				respuesta.put("mensaje", "Cliente creado con exito");
+//				return ResponseEntity
+//						.created(URI.create("/api/client/".concat(c.getId())))
+//						.contentType(MediaType.APPLICATION_JSON_UTF8)
+//						.body(respuesta);
+//			});
+//		}).onErrorResume(t -> {
+//			return Mono.just(t).cast(WebExchangeBindException.class)
+//					.flatMap(e -> Mono.just(e.getFieldErrors()))
+//					.flatMapMany(Flux::fromIterable)
+//					.map(fieldError -> "El campo "+fieldError.getField() + " " + fieldError.getDefaultMessage())
+//					.collectList()
+//					.flatMap(list -> {
+//						respuesta.put("errors", list);						
+//						respuesta.put("status", HttpStatus.BAD_REQUEST.value());
+//						return Mono.just(ResponseEntity.badRequest().body(respuesta));
+//					});
+//							
+//		});
+//		
+//
+//	}
+	
 	@PostMapping
-	public Mono<ResponseEntity<Map<String, Object>>> crearclientperson(@Valid @RequestBody Mono<ClientPerson> monoClient){
+	public Mono<ClientPerson> create(@RequestBody ClientPerson monoclient){
 		
-		Map<String, Object> respuesta = new HashMap<String, Object>();
-		
-		return monoClient.flatMap(clientperson ->{
-			return service.saveClientPerson(clientperson).map(c ->{
-				respuesta.put("client", c);
-				respuesta.put("mensaje", "Cliente creado con exito");
-				return ResponseEntity
-						.created(URI.create("/api/client/".concat(c.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
-						.body(respuesta);
-			});
-		}).onErrorResume(t -> {
-			return Mono.just(t).cast(WebExchangeBindException.class)
-					.flatMap(e -> Mono.just(e.getFieldErrors()))
-					.flatMapMany(Flux::fromIterable)
-					.map(fieldError -> "El campo "+fieldError.getField() + " " + fieldError.getDefaultMessage())
-					.collectList()
-					.flatMap(list -> {
-						respuesta.put("errors", list);						
-						respuesta.put("status", HttpStatus.BAD_REQUEST.value());
-						return Mono.just(ResponseEntity.badRequest().body(respuesta));
-					});
-							
-		});
-		
-
+			return service.saveClientPerson(monoclient);						
 	}
 	
 //	@DeleteMapping("/{id}")

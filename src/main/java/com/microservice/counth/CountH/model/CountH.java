@@ -17,6 +17,10 @@ public class CountH {
 	private String num;
 
 	private Double monto;
+	
+	private String bank;
+	
+	private String codBank;
 
 	@Valid
 	@NotNull
@@ -86,6 +90,24 @@ public class CountH {
 	public void setFirmante(List<Firmante> firmante) {
 		this.firmante = firmante;
 	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getCodBank() {
+		return codBank;
+	}
+
+	public void setCodBank(String codBank) {
+		this.codBank = codBank;
+	}
+	
+	
 
 	
 }

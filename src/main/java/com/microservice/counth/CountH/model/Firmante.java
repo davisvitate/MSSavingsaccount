@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 	private String name;
 	
 	
-	private Double lastname;
+	private String lastname;
 	
 	
 	private String dni;
@@ -36,11 +36,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 		this.name = name;
 	}
 
-	public Double getLastname() {
+	public String getLastname() {
 		return lastname;
 	}
 
-	public void setLastname(Double lastname) {
+	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
 
