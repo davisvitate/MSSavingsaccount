@@ -19,7 +19,7 @@ public class ClientPerson {
 	
 	private String dni;
 	
-	
+	private String type;
 	
 	public ClientPerson() {
 		
@@ -41,6 +41,14 @@ public class ClientPerson {
 
 	public String getId() {
 		return Id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public void setId(String id) {

@@ -12,7 +12,7 @@ public class WebClientConfig {
 	@Bean
 	@Qualifier("Movement")
 	public WebClient registerWebClient() {
-		return WebClient.create("http://localhost:8090/api2/movement/createM");
+		return WebClient.create("http://localhost:8090/apimovement/movement/createM");
 		
 	}
 	
@@ -20,7 +20,7 @@ public class WebClientConfig {
 	@Bean
 	@Qualifier("Client")
 	public WebClient registerWebClien() {
-		return WebClient.create("http://localhost:8090/api3/client/createC");
+		return WebClient.create("http://localhost:8090/apiclient/client/createC");
 		
 	}
 }

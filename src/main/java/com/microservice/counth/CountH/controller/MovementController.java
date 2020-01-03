@@ -50,7 +50,7 @@ public class MovementController {
 	
 	//withdrawal is done
 	@PutMapping("/retire/{id}")
-	public Mono<ResponseEntity<CountH>> upadateretire(@RequestBody CountH counth, @PathVariable String id){
+	public Mono<ResponseEntity<CountH>> updateretire(@RequestBody CountH counth, @PathVariable String id){
 		
 		Movement mov= new Movement();
 		
@@ -76,18 +76,19 @@ public class MovementController {
 	
 	//deposit is made
 	@PutMapping("/deposite/{id}")
-	public Mono<ResponseEntity<CountH>> upadeposit(@RequestBody CountH counth, @PathVariable String id){
+	public Mono<ResponseEntity<CountH>> updeposit(@RequestBody CountH counth, @PathVariable String id){
 		Movement mov= new Movement();
 		return service.findById(id).flatMap(c -> {
 			double montoantes= c.getMonto();
 			c.setMonto(montoantes + counth.getMonto());
-			c.setClientperson(counth.getClientperson());
+			//c.setClientperson(counth.getClientperson());
 			mov.setNum_count(counth.getNum());
 			mov.setDescription("Deposite");
 			mov.setSaldo(counth.getMonto());
 			mov.setDate(new Date());
 			mov.setClient(counth.getClientperson());
 			service.saveMove(mov).subscribe();// deposite of the mevement
+			serviceclient.saveMSMovement(mov).subscribe();
 			return service.save(c);
 		}).map(c->ResponseEntity.created(URI.create("/counth/deposite/".concat(c.getId())))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

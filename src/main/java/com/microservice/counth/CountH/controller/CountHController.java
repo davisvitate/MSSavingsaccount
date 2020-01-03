@@ -24,7 +24,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import com.microservice.counth.CountH.model.ClientPerson;
 import com.microservice.counth.CountH.model.CountH;
+import com.microservice.counth.CountH.services.CountHServiceImp;
 import com.microservice.counth.CountH.services.CountHServices;
 
 import ch.qos.logback.core.util.ContentTypeUtil;
@@ -40,8 +42,11 @@ public class CountHController {
 	@Autowired
 	private CountHServices service;
 	
+	@Autowired
+	private CountHServiceImp serviceclient;
 	
-	private String path;
+	
+	
 	
 	@GetMapping
 	public Mono<ResponseEntity<Flux<CountH>>> lista(){
@@ -51,7 +56,7 @@ public class CountHController {
 				.body(service.findAll())
 				);
 	}
-	
+	//see the list of savings accounts for id
 	@GetMapping("/{id}")
 	public Mono<ResponseEntity<CountH>> ver(@PathVariable String id){
 		return service.findById(id).map(p -> ResponseEntity.ok()
@@ -72,11 +77,14 @@ public class CountHController {
 //			 
 //									
 //	}
-	
+	//creation of a savings account 
 	@PostMapping
 	public Mono<CountH> create(@RequestBody CountH monoCounth){
-		
-		
+		ClientPerson client= new ClientPerson();
+		 client =monoCounth.getClientperson();
+		client.setType("personal client");
+		serviceclient.saveMSClient(client).subscribe();
+		service.saveClientPerson(client).subscribe();
 		return service.save(monoCounth);
 			 
 									
@@ -116,22 +124,23 @@ public class CountHController {
 //	public Mono<> create(@RequestBody Mono<CountH> monoProducto){
 //		
 
-	
+	//edit the savings account
 	@PutMapping("/{id}")
-	public Mono<ResponseEntity<CountH>> editar(@RequestBody CountH counth, @PathVariable String id){
+	public Mono<ResponseEntity<CountH>> upadate(@RequestBody CountH counth, @PathVariable String id){
 		return service.findById(id).flatMap(c -> {
 			c.setNum(counth.getNum());
 			c.setMonto(counth.getMonto());
 			c.setClientperson(counth.getClientperson());
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/api/counth/".concat(c.getId())))
+		}).map(c->ResponseEntity.created(URI.create("/counth/".concat(c.getId())))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.body(c))
 		.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 	
+	//delete the savings account
 	@DeleteMapping("/{id}")
-	public Mono<ResponseEntity<Void>> eliminar(@PathVariable String id){
+	public Mono<ResponseEntity<Void>> delete(@PathVariable String id){
 		return service.findById(id).flatMap(p ->{
 			return service.delete(p).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
 		}).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
