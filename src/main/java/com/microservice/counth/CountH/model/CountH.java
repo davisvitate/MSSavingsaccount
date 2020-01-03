@@ -21,6 +21,10 @@ public class CountH {
 	private String bank;
 	
 	private String codBank;
+	
+	private int num_mov= 0;
+	
+	private double commission=0;
 
 	@Valid
 	@NotNull
@@ -105,6 +109,22 @@ public class CountH {
 
 	public void setCodBank(String codBank) {
 		this.codBank = codBank;
+	}
+
+	public int getNum_mov() {
+		return num_mov;
+	}
+
+	public void setNum_mov(int num_mov) {
+		this.num_mov = num_mov;
+	}
+
+	public double getCommission() {
+		return commission;
+	}
+
+	public void setCommission(double commission) {
+		this.commission = commission;
 	}
 	
 	

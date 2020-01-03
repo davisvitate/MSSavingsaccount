@@ -56,13 +56,22 @@ public class MovementController {
 		
 		return service.findById(id).flatMap(c -> {
 			double montoantes=c.getMonto();
+			int num_mov_inicial= c.getNum_mov();			
 			if(montoantes>=counth.getMonto()) {
 			c.setMonto(montoantes-counth.getMonto());
+			c.setNum_mov(num_mov_inicial+1);
 			mov.setNum_count(counth.getNum());
 			mov.setDescription("Retire");
 			mov.setSaldo(counth.getMonto());
 			mov.setDate(new Date());
 			mov.setClient(counth.getClientperson());
+			mov.setType_account("savings account");
+			mov.setNum_mov(c.getNum_mov());
+			if(c.getNum_mov()>=4) {
+				double comisionantes= c.getCommission();
+				c.setCommission(comisionantes+2);
+				c.setMonto(c.getMonto()-2);
+			}
 			service.saveMove(mov).subscribe();// registre of the movement
 			
 			serviceclient.saveMSMovement(mov).subscribe();// registre of the movement on the microservice
@@ -80,13 +89,17 @@ public class MovementController {
 		Movement mov= new Movement();
 		return service.findById(id).flatMap(c -> {
 			double montoantes= c.getMonto();
+			int num_mov_inicial= c.getNum_mov();
 			c.setMonto(montoantes + counth.getMonto());
+			c.setNum_mov(num_mov_inicial+1);
 			//c.setClientperson(counth.getClientperson());
 			mov.setNum_count(counth.getNum());
 			mov.setDescription("Deposite");
 			mov.setSaldo(counth.getMonto());
 			mov.setDate(new Date());
 			mov.setClient(counth.getClientperson());
+			mov.setType_account("savings account");
+			mov.setNum_mov(c.getNum_mov());
 			service.saveMove(mov).subscribe();// deposite of the mevement
 			serviceclient.saveMSMovement(mov).subscribe();
 			return service.save(c);
