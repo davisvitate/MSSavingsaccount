@@ -2,6 +2,9 @@ package com.microservice.counth.CountH.services;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -217,8 +220,23 @@ public class CountHServiceImp implements CountHServices {
 				.retrieve()
 				.bodyToMono(ClientPerson.class);
 	}
-	
 
+	@Override
+	public Flux<CountH> findByDniClient(String dni) {
+		// TODO Auto-generated method stub
+		return countrepositry.findByDniClient(dni);
+	}
+	
+	public Mono<Map<String, Object>> getMoney(String dni) {
+		// TODO Auto-generated method stub
+		Map<String, Object> respuesta = new HashMap<String, Object>();
+
+		return countrepositry.findByDniMono(dni).map(c -> {
+			respuesta.put("saldo", c.getMonto());
+			return respuesta;
+		});
+		// return null;
+	}
 	
 
 }

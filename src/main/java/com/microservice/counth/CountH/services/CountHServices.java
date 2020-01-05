@@ -1,6 +1,8 @@
 package com.microservice.counth.CountH.services;
 
 
+import java.util.Map;
+
 import com.microservice.counth.CountH.model.ClientPerson;
 import com.microservice.counth.CountH.model.CountH;
 import com.microservice.counth.CountH.model.Firmante;
@@ -19,6 +21,10 @@ public interface CountHServices {
 	public Mono<CountH> save(CountH counth);
 	
 	public Mono<Void> delete(CountH counth);
+	
+	public Flux<CountH> findByDniClient(String dni);
+	
+	public Mono<Map<String, Object>> getMoney(String dni);
 	
 	
 	public Flux<ClientPerson> findAllClientPerson();

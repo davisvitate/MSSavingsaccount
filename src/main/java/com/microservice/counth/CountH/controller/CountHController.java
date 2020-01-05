@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.net.URI;
-
-
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -35,37 +34,28 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/counth")	
+@RequestMapping("/counth")
 public class CountHController {
 	private static Logger log = LoggerFactory.getLogger(CountHController.class);
-	
+
 	@Autowired
 	private CountHServices service;
-	
+
 	@Autowired
 	private CountHServiceImp serviceclient;
-	
-	
-	
-	
+
 	@GetMapping
-	public Mono<ResponseEntity<Flux<CountH>>> lista(){
-		return Mono.just(
-				ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(service.findAll())
-				);
+	public Mono<ResponseEntity<Flux<CountH>>> lista() {
+		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(service.findAll()));
 	}
-	//see the list of savings accounts for id
+
+	// see the list of savings accounts for id
 	@GetMapping("/{id}")
-	public Mono<ResponseEntity<CountH>> ver(@PathVariable String id){
-		return service.findById(id).map(p -> ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(p))
+	public Mono<ResponseEntity<CountH>> ver(@PathVariable String id) {
+		return service.findById(id).map(p -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(p))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
-	
-	
+
 //	@PostMapping
 //	public Mono<CountH> create(@RequestBody CountH monoCounth){
 //		String dni =monoCounth.getClientperson().getDni();
@@ -77,22 +67,18 @@ public class CountHController {
 //			 
 //									
 //	}
-	//creation of a savings account 
+	// creation of a savings account
 	@PostMapping
-	public Mono<CountH> create(@RequestBody CountH monoCounth){
-		ClientPerson client= new ClientPerson();
-		 client =monoCounth.getClientperson();
+	public Mono<CountH> create(@RequestBody CountH monoCounth) {
+		ClientPerson client = new ClientPerson();
+		client = monoCounth.getClientperson();
 		client.setType("personal client");
 		serviceclient.saveMSClient(client).subscribe();
 		service.saveClientPerson(client).subscribe();
 		return service.save(monoCounth);
-			 
-									
+
 	}
-	
-	
-	
-	
+
 //	@PostMapping
 //	public Mono<ResponseEntity<Map<String, Object>>> crear(@RequestBody Mono<CountH> monoProducto){
 //		
@@ -120,31 +106,41 @@ public class CountHController {
 //					});						
 //		});
 //	}
-	
+
 //	public Mono<> create(@RequestBody Mono<CountH> monoProducto){
 //		
 
-	//edit the savings account
+	// edit the savings account
 	@PutMapping("/{id}")
-	public Mono<ResponseEntity<CountH>> upadate(@RequestBody CountH counth, @PathVariable String id){
+	public Mono<ResponseEntity<CountH>> upadate(@RequestBody CountH counth, @PathVariable String id) {
 		return service.findById(id).flatMap(c -> {
 			c.setNum(counth.getNum());
 			c.setMonto(counth.getMonto());
 			c.setClientperson(counth.getClientperson());
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/counth/".concat(c.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(c))
-		.defaultIfEmpty(ResponseEntity.notFound().build());
+		}).map(c -> ResponseEntity.created(URI.create("/counth/".concat(c.getId())))
+				.contentType(MediaType.APPLICATION_JSON_UTF8).body(c))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
-	
-	//delete the savings account
+
+	// delete the savings account
 	@DeleteMapping("/{id}")
-	public Mono<ResponseEntity<Void>> delete(@PathVariable String id){
-		return service.findById(id).flatMap(p ->{
+	public Mono<ResponseEntity<Void>> delete(@PathVariable String id) {
+		return service.findById(id).flatMap(p -> {
 			return service.delete(p).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
 		}).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
 	}
+	
+	@GetMapping("/counthclient/{dni}")
+	public Flux<CountH> getClientDni(@PathVariable String dni) {
+		
+		return service.findByDniClient(dni);
 
+	}
+	
+	@GetMapping("/getmoney/{dni}")
+	public Mono<Map<String, Object>>  getMoney(@PathVariable String dni) {
+		return service.getMoney(dni);
+	}
 
 }

@@ -31,68 +31,62 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/counth")
 public class MovementController {
-	
+
 	@Autowired
 	private CountHServices service;
-	
+
 	@Autowired
 	private CountHServiceImp serviceclient;
-	
+
 	@GetMapping("/movement")
-	public Mono<ResponseEntity<Flux<Movement>>> lista(){
-		return Mono.just(
-				ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(service.findAllMove())
-				);
+	public Mono<ResponseEntity<Flux<Movement>>> lista() {
+		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(service.findAllMove()));
 	}
-	
-	
-	//withdrawal is done
+
+	// withdrawal is done
 	@PutMapping("/retire/{id}")
-	public Mono<ResponseEntity<CountH>> updateretire(@RequestBody CountH counth, @PathVariable String id){
-		
-		Movement mov= new Movement();
-		
+	public Mono<ResponseEntity<CountH>> updateretire(@RequestBody CountH counth, @PathVariable String id) {
+
+		Movement mov = new Movement();
+
 		return service.findById(id).flatMap(c -> {
-			double montoantes=c.getMonto();
-			int num_mov_inicial= c.getNum_mov();			
-			if(montoantes>=counth.getMonto()) {
-			c.setMonto(montoantes-counth.getMonto());
-			c.setNum_mov(num_mov_inicial+1);
-			mov.setNum_count(counth.getNum());
-			mov.setDescription("Retire");
-			mov.setSaldo(counth.getMonto());
-			mov.setDate(new Date());
-			mov.setClient(counth.getClientperson());
-			mov.setType_account("savings account");
-			mov.setNum_mov(c.getNum_mov());
-			if(c.getNum_mov()>=4) {
-				double comisionantes= c.getCommission();
-				c.setCommission(comisionantes+2);
-				c.setMonto(c.getMonto()-2);
-			}
-			service.saveMove(mov).subscribe();// registre of the movement
-			
-			serviceclient.saveMSMovement(mov).subscribe();// registre of the movement on the microservice
+			double montoantes = c.getMonto();
+			int num_mov_inicial = c.getNum_mov();
+			if (montoantes >= counth.getMonto()) {
+				c.setMonto(montoantes - counth.getMonto());
+				c.setNum_mov(num_mov_inicial + 1);
+				mov.setNum_count(counth.getNum());
+				mov.setDescription("Retire");
+				mov.setSaldo(counth.getMonto());
+				mov.setDate(new Date());
+				mov.setClient(counth.getClientperson());
+				mov.setType_account("savings account");
+				mov.setNum_mov(c.getNum_mov());
+				if (c.getNum_mov() >= 4) {
+					double comisionantes = c.getCommission();
+					c.setCommission(comisionantes + 2);
+					c.setMonto(c.getMonto() - 2);
+				}
+				service.saveMove(mov).subscribe();// registre of the movement
+
+				serviceclient.saveMSMovement(mov).subscribe();// registre of the movement on the microservice
 			}
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/counth/retire/".concat(c.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(c))
-		.defaultIfEmpty(ResponseEntity.notFound().build());
+		}).map(c -> ResponseEntity.created(URI.create("/counth/retire/".concat(c.getId())))
+				.contentType(MediaType.APPLICATION_JSON_UTF8).body(c))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
-	
-	//deposit is made
+
+	// deposit is made
 	@PutMapping("/deposite/{id}")
-	public Mono<ResponseEntity<CountH>> updeposit(@RequestBody CountH counth, @PathVariable String id){
-		Movement mov= new Movement();
+	public Mono<ResponseEntity<CountH>> updeposit(@RequestBody CountH counth, @PathVariable String id) {
+		Movement mov = new Movement();
 		return service.findById(id).flatMap(c -> {
-			double montoantes= c.getMonto();
-			int num_mov_inicial= c.getNum_mov();
+			double montoantes = c.getMonto();
+			int num_mov_inicial = c.getNum_mov();
 			c.setMonto(montoantes + counth.getMonto());
-			c.setNum_mov(num_mov_inicial+1);
-			//c.setClientperson(counth.getClientperson());
+			c.setNum_mov(num_mov_inicial + 1);
+			// c.setClientperson(counth.getClientperson());
 			mov.setNum_count(counth.getNum());
 			mov.setDescription("Deposite");
 			mov.setSaldo(counth.getMonto());
@@ -100,13 +94,19 @@ public class MovementController {
 			mov.setClient(counth.getClientperson());
 			mov.setType_account("savings account");
 			mov.setNum_mov(c.getNum_mov());
+			if (c.getNum_mov() >= 4) {
+				double comisionantes = c.getCommission();
+				c.setCommission(comisionantes + 2);
+				c.setMonto(c.getMonto() - 2);
+			}
 			service.saveMove(mov).subscribe();// deposite of the mevement
 			serviceclient.saveMSMovement(mov).subscribe();
 			return service.save(c);
-		}).map(c->ResponseEntity.created(URI.create("/counth/deposite/".concat(c.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(c))
-		.defaultIfEmpty(ResponseEntity.notFound().build());
+		}).map(c -> ResponseEntity.created(URI.create("/counth/deposite/".concat(c.getId())))
+				.contentType(MediaType.APPLICATION_JSON_UTF8).body(c))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
+	
+	
 
 }
