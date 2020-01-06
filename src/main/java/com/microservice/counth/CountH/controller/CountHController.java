@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.microservice.counth.CountH.model.ClientPerson;
+import com.microservice.counth.CountH.model.ClientPersonInfo;
 import com.microservice.counth.CountH.model.CountH;
 import com.microservice.counth.CountH.services.CountHServiceImp;
 import com.microservice.counth.CountH.services.CountHServices;
@@ -68,12 +69,32 @@ public class CountHController {
 //									
 //	}
 	// creation of a savings account
+	
+//	@PostMapping
+//	public Mono<CountH> create(@RequestBody CountH monoCounth) {
+//		ClientPerson client = new ClientPerson();
+//		client = monoCounth.getClientperson();
+//		client.setType("personal client");
+//		serviceclient.saveMSClient(client).subscribe();
+//		service.saveClientPerson(client).subscribe();
+//		return service.save(monoCounth);
+//
+//	}
 	@PostMapping
 	public Mono<CountH> create(@RequestBody CountH monoCounth) {
 		ClientPerson client = new ClientPerson();
-		client = monoCounth.getClientperson();
+		client = monoCounth.getClientperson();;
 		client.setType("personal client");
-		serviceclient.saveMSClient(client).subscribe();
+		ClientPersonInfo clientinfo= new ClientPersonInfo();
+		clientinfo.setName(monoCounth.getClientperson().getName());
+		clientinfo.setLastname(monoCounth.getClientperson().getLastname());
+		clientinfo.setNum_ahorro(monoCounth.getNum());
+		clientinfo.setDni(monoCounth.getClientperson().getDni());
+		clientinfo.setType("personal client");
+		
+		//monoCurrentAccount.getNum();
+		serviceclient.saveMSClientinfo(clientinfo).subscribe();
+
 		service.saveClientPerson(client).subscribe();
 		return service.save(monoCounth);
 

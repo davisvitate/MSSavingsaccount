@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotEmpty;
 
 
-@Document(collection="clientpersonn")
+@Document(collection="clientperson")
 public class ClientPerson {
 	
 	@Id

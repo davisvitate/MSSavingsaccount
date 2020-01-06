@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.microservice.counth.CountH.model.ClientPerson;
+import com.microservice.counth.CountH.model.ClientPersonInfo;
 import com.microservice.counth.CountH.model.CountH;
 import com.microservice.counth.CountH.model.Firmante;
 import com.microservice.counth.CountH.model.Movement;
@@ -20,9 +21,6 @@ import com.microservice.counth.CountH.repository.CountHRepository;
 import com.microservice.counth.CountH.repository.FirmanteRepository;
 import com.microservice.counth.CountH.repository.MoveRepository;
 import com.microservice.counth.CountH.repository.TitularRepository;
-
-
-
 
 
 import reactor.core.publisher.Flux;
@@ -220,6 +218,17 @@ public class CountHServiceImp implements CountHServices {
 				.retrieve()
 				.bodyToMono(ClientPerson.class);
 	}
+	
+	@SuppressWarnings("deprecation")
+	public Mono<ClientPersonInfo> saveMSClientinfo(ClientPersonInfo client) {
+		return client1.post()
+				.accept(APPLICATION_JSON_UTF8)
+				.contentType(APPLICATION_JSON_UTF8)
+				//.body(fromObject(producto))
+				.syncBody(client)
+				.retrieve()
+				.bodyToMono(ClientPersonInfo.class);
+	}
 
 	@Override
 	public Flux<CountH> findByDniClient(String dni) {
@@ -233,6 +242,7 @@ public class CountHServiceImp implements CountHServices {
 
 		return countrepositry.findByDniMono(dni).map(c -> {
 			respuesta.put("money", c.getMonto());
+			respuesta.put("name", c.getClientperson().getName());
 			return respuesta;
 		});
 		// return null;
