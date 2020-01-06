@@ -18,6 +18,8 @@ public interface CountHServices {
 	
 	public Mono<CountH> findById(String id);
 	
+	public Mono<CountH> findByDniMono(String dni);
+	
 	public Mono<CountH> save(CountH counth);
 	
 	public Mono<Void> delete(CountH counth);

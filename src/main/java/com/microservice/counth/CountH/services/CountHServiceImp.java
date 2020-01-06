@@ -232,10 +232,16 @@ public class CountHServiceImp implements CountHServices {
 		Map<String, Object> respuesta = new HashMap<String, Object>();
 
 		return countrepositry.findByDniMono(dni).map(c -> {
-			respuesta.put("saldo", c.getMonto());
+			respuesta.put("money", c.getMonto());
 			return respuesta;
 		});
 		// return null;
+	}
+
+	@Override
+	public Mono<CountH> findByDniMono(String dni) {
+		// TODO Auto-generated method stub
+		return countrepositry.findByDniMono(dni);
 	}
 	
 

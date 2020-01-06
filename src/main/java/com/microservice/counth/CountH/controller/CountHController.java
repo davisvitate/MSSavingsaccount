@@ -131,7 +131,7 @@ public class CountHController {
 		}).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
 	}
 	
-	@GetMapping("/counthclient/{dni}")
+	@GetMapping("/dni/{dni}")
 	public Flux<CountH> getClientDni(@PathVariable String dni) {
 		
 		return service.findByDniClient(dni);
